@@ -15,15 +15,9 @@
     </div>
 </div>
 <h2>Posts</h2>
-    <ul>
-        {% for post in user.posts %}
-        <li>
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.content }}</p>
-        </li>
-        {% endfor %}
-    </ul>
 
-    <a href="{{ url_for('new_post', user_id=user.id) }}" class="add-post">Add Post</a>
+    {% for post in user.posts %}
+    <a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a>
+{% endfor %}
 </div>
 {% endblock %}

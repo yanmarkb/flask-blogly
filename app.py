@@ -83,23 +83,24 @@ def new_post(user_id):
 @app.route('/posts/<int:post_id>', methods=['GET'])
 def post_detail(post_id):
     """Show a post and buttons to edit and delete the post."""
-
     post = Post.query.get_or_404(post_id)
-    return render_template('post_detail.html', post=post)
+    user = User.query.get_or_404(post.user_id)
+    return render_template('post_detail.html', post=post, user=user)
 
 @app.route('/posts/<int:post_id>/edit', methods=['GET', 'POST'])
 def edit_post(post_id):
     """Show form to edit a post and handle form submission."""
-
     post = Post.query.get_or_404(post_id)
+    user = User.query.get_or_404(post.user_id)
+    
 
     if request.method == 'POST':
         post.title = request.form['title']
         post.content = request.form['content']
         db.session.commit()
-        return redirect(url_for('post_detail', post_id=post_id))
+        return redirect(url_for('post_detail', post_id=post_id, user=user))
 
-    return render_template('edit_post.html', post=post)
+    return render_template('edit_post.html', post=post, user=user)
 
 @app.route('/posts/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
