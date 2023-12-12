@@ -65,52 +65,51 @@ def delete_user(user_id):
     db.session.commit()  # Committing the changes to the database.
     return redirect(url_for('users'))  # Redirecting to the 'users' route.
 
+
 @app.route('/users/<int:user_id>/posts/new', methods=['GET', 'POST'])
 def new_post(user_id):
     """Show form to add a post for that user and handle form submission."""
-    user = User.query.get_or_404(user_id)
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-        post = Post(title=title, content=content, user_id=user_id)
-        db.session.add(post)
-        db.session.commit()
-        return redirect(url_for('user_detail', user_id=user_id))
-        
+    user = User.query.get_or_404(user_id)  # Get the user with the given user_id from the database.
+    if request.method == 'POST':  # Check if the request method is POST.
+        title = request.form['title']  # Get the value of the 'title' field from the form.
+        content = request.form['content']  # Get the value of the 'content' field from the form.
+        post = Post(title=title, content=content, user_id=user_id)  # Create a new Post object with the given title, content, and user_id.
+        db.session.add(post)  # Add the post to the database session.
+        db.session.commit()  # Commit the changes to the database.
+        return redirect(url_for('user_detail', user_id=user_id))  # Redirect to the 'user_detail' route for the user.
 
-    return render_template('new_post.html', user=user)
+    return render_template('new_post.html', user=user)  # Render the 'new_post.html' template with the user data.
 
 @app.route('/posts/<int:post_id>', methods=['GET'])
 def post_detail(post_id):
     """Show a post and buttons to edit and delete the post."""
-    post = Post.query.get_or_404(post_id)
-    user = User.query.get_or_404(post.user_id)
-    return render_template('post_detail.html', post=post, user=user)
+    post = Post.query.get_or_404(post_id)  # Get the post with the given post_id from the database.
+    user = User.query.get_or_404(post.user_id)  # Get the user associated with the post.
+    return render_template('post_detail.html', post=post, user=user)  # Render the 'post_detail.html' template with the post and user data.
 
 @app.route('/posts/<int:post_id>/edit', methods=['GET', 'POST'])
 def edit_post(post_id):
     """Show form to edit a post and handle form submission."""
-    post = Post.query.get_or_404(post_id)
-    user = User.query.get_or_404(post.user_id)
-    
+    post = Post.query.get_or_404(post_id)  # Get the post with the given post_id from the database.
+    user = User.query.get_or_404(post.user_id)  # Get the user associated with the post.
 
-    if request.method == 'POST':
-        post.title = request.form['title']
-        post.content = request.form['content']
-        db.session.commit()
-        return redirect(url_for('post_detail', post_id=post_id, user=user))
+    if request.method == 'POST':  # Check if the request method is POST.
+        post.title = request.form['title']  # Update the post's title with the value from the form.
+        post.content = request.form['content']  # Update the post's content with the value from the form.
+        db.session.commit()  # Commit the changes to the database.
+        return redirect(url_for('post_detail', post_id=post_id, user=user))  # Redirect to the 'post_detail' route for the post.
 
-    return render_template('edit_post.html', post=post, user=user)
+    return render_template('edit_post.html', post=post, user=user)  # Render the 'edit_post.html' template with the post and user data.
 
 @app.route('/posts/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
     """Delete a post."""
-
-    post = Post.query.get_or_404(post_id)
-    db.session.delete(post)
-    db.session.commit()
-    return redirect(url_for('user_detail', user_id=post.user_id))
+    post = Post.query.get_or_404(post_id)  # Get the post with the given post_id from the database.
+    db.session.delete(post)  # Delete the post from the database.
+    db.session.commit()  # Commit the changes to the database.
+    return redirect(url_for('user_detail', user_id=post.user_id))  # Redirect to the 'user_detail' route for the user.
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Running the Flask application in debug mode.
+    app.run(debug=True)  # Run the Flask application in debug mode.
+
 
