@@ -141,11 +141,11 @@ img {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-left: 123px;
+    padding-left: 100px;
 }
 
 .post-title {
-    padding-left: 65px;
+    padding-left: 50px;
 }
 
 .users-home {
@@ -155,4 +155,46 @@ img {
     padding: 10px;
     display: inline-block;
     border-radius: 5px;
+}
+
+.cancel-btn{
+    background-color: teal;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    width: 165px;
+    text-align: center;
+    margin: 5px;
+    font-size: medium;
+}
+
+.cancel-btn-2{
+    background-color: teal;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    width: 100px;
+    text-align: center;
+    margin: 5px;
+    font-size: medium;
+}
+
+.cancel-button{
+    background-color: teal;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    width: 128px;
+    text-align: center;
+    margin: 5px;
+    font-size: medium;
 }

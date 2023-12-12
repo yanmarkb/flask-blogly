@@ -12,5 +12,6 @@
     <input type="url" id="image_url" name="image_url" value="{{ user.image_url }}">
     <button type="submit">Save</button>
 </form>
-<a href="{{ url_for('user_detail', user_id=user.id) }}">Cancel</a>
+
+<a href="{{ url_for('user_detail', user_id=user.id) }}" class="cancel-button">Cancel</a>
 {% endblock %}
