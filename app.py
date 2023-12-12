@@ -1,9 +1,9 @@
 
-"""Blogly application.""" 
+"""Blogly application."""
 
 from flask import Flask, render_template, request, redirect, url_for 
 
-from models import db, User  # Importing the db and User classes from the models module.
+from models import db, User, Post  # Importing the db and User classes from the models module.
 
 app = Flask(__name__) 
 
@@ -64,6 +64,51 @@ def delete_user(user_id):
     User.query.filter_by(id=user_id).delete()  # Deleting the user with the given user_id from the database.
     db.session.commit()  # Committing the changes to the database.
     return redirect(url_for('users'))  # Redirecting to the 'users' route.
+
+@app.route('/users/<int:user_id>/posts/new', methods=['GET', 'POST'])
+def new_post(user_id):
+    """Show form to add a post for that user and handle form submission."""
+    user = User.query.get_or_404(user_id)
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        post = Post(title=title, content=content, user_id=user_id)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('user_detail', user_id=user_id))
+        
+
+    return render_template('new_post.html', user=user)
+
+@app.route('/posts/<int:post_id>', methods=['GET'])
+def post_detail(post_id):
+    """Show a post and buttons to edit and delete the post."""
+
+    post = Post.query.get_or_404(post_id)
+    return render_template('post_detail.html', post=post)
+
+@app.route('/posts/<int:post_id>/edit', methods=['GET', 'POST'])
+def edit_post(post_id):
+    """Show form to edit a post and handle form submission."""
+
+    post = Post.query.get_or_404(post_id)
+
+    if request.method == 'POST':
+        post.title = request.form['title']
+        post.content = request.form['content']
+        db.session.commit()
+        return redirect(url_for('post_detail', post_id=post_id))
+
+    return render_template('edit_post.html', post=post)
+
+@app.route('/posts/<int:post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+    """Delete a post."""
+
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('user_detail', user_id=post.user_id))
 
 if __name__ == '__main__':
     app.run(debug=True)  # Running the Flask application in debug mode.

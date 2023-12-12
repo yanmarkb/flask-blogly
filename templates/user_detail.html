@@ -2,10 +2,28 @@
 {% block title %} - {{ user.first_name }} {{ user.last_name }}{% endblock %}
 
 {% block content %}
-<h1>{{ user.first_name }} {{ user.last_name }}</h1>
-<img src="{{ user.image_url }}" alt="{{ user.first_name }} {{ user.last_name }}">
-<a href="{{ url_for('edit_user', user_id=user.id) }}" class="edit">Edit</a>
-<form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}">
-    <button type="submit" class="delete">Delete</button>
-</form>
+<div class="user-detail">
+    <div class="user-image">
+        <img src="{{ user.image_url }}" alt="{{ user.first_name }} {{ user.last_name }}">
+    </div>
+    <div class="user-info">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="edit">Edit</a>
+        <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}">
+            <button class="delete">Delete</button>
+        </form>
+    </div>
+</div>
+<h2>Posts</h2>
+    <ul>
+        {% for post in user.posts %}
+        <li>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('new_post', user_id=user.id) }}" class="add-post">Add Post</a>
+</div>
 {% endblock %}
