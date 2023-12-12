@@ -67,6 +67,7 @@ a.add-user {
     font-size: medium;
     text-align: center;
     display: inline-block;
+    margin: 5px;
 }
 
 img {
@@ -79,7 +80,7 @@ img {
 .user-list-item {
     list-style-position: left;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .user-detail {
@@ -99,4 +100,59 @@ img {
     width: 200px;
     height: 200px;
     float: left;
+}
+
+.new-post-btn {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    width: 100px;
+    text-align: center;
+}
+
+.posts-list {
+    list-style-position: left;
+    display: flex;
+    align-items: flex-start;
+    text-decoration: none;
+    text-decoration: dashed;
+    padding: 10px;
+}
+
+.edit-post-button {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    width: 100px;
+    text-align: center;
+    margin: 5px;
+}
+
+.user-posts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 123px;
+}
+
+.post-title {
+    padding-left: 65px;
+}
+
+.users-home {
+    background-color: grey;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 5px;
 }
