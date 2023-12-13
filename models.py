@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy  # Import the SQLAlchemy module for working with databases
+from flask_sqlalchemy import SQLAlchemy  # Imports the SQLAlchemy module for working with databases
 from datetime import datetime  # Import the datetime module for working with dates and times
 
 db = SQLAlchemy()  # Create an instance of the SQLAlchemy class to interact with the database
@@ -6,10 +6,11 @@ db = SQLAlchemy()  # Create an instance of the SQLAlchemy class to interact with
 class User(db.Model):  # Define a User class that represents a table in the database
     __tablename__ = "users"  # Set the name of the table in the database
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Define a column for the user's ID
-    first_name = db.Column(db.String(50), nullable=False)  # Define a column for the user's first name
-    last_name = db.Column(db.String(50), nullable=False)  # Define a column for the user's last name
-    image_url = db.Column(db.String(500), nullable=True)  # Define a column for the user's image URL
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Defines a column for the user's ID
+    first_name = db.Column(db.String(50), nullable=False)  # Defines a column for the user's first name
+    last_name = db.Column(db.String(50), nullable=False)  # Defines a column for the user's last name
+    image_url = db.Column(db.String(500), nullable=True)  # Defines a column for the user's image URL
+    
 
 class Post(db.Model):  # Define a Post class that represents a table in the database
     """Blog post."""

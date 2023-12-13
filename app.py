@@ -1,11 +1,11 @@
 
 """Blogly application."""
 
-from flask import Flask, render_template, request, redirect, url_for 
+from flask import Flask, render_template, request, redirect, url_for  # Importing the Flask class, render_template function, and request object.
 
 from models import db, User, Post  # Importing the db and User classes from the models module.
 
-app = Flask(__name__) 
+app = Flask(__name__)  # Creating an instance of the Flask class.
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'  # Configuring the database URI.
 
