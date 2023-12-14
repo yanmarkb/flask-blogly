@@ -21,6 +21,9 @@
     <a href="{{ url_for('post_detail', post_id=post.id) }}" class="posts-list">{{ post.title }}</a>
 {% endfor %}
 <a href="{{ url_for('new_post', user_id=user.id) }}" class="new-post-btn">New Post</a>
-    </div>
+
+    <a href="/tags" class="new-post-btn">View Tags</a>
+
+    <a href="{{ url_for('new_tag') }}" class="new-post-btn">Create Tag</a>
 </div>
 {% endblock %}

@@ -24,3 +24,23 @@ class Post(db.Model):  # Define a Post class that represents a table in the data
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Define a column for the user ID associated with the post
 
     user = db.relationship('User', backref='posts')  # Define a relationship between the Post and User classes
+    tags = db.relationship('Tag', secondary="posttags", backref="related_posts")
+
+class Tag(db.Model):
+    """Tag model."""
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, unique=True, nullable=False)
+
+    posts = db.relationship('Post', secondary="posttags", backref="related_tags")
+
+
+class PostTag(db.Model):
+    """PostTag model."""
+
+    __tablename__ = "posttags"
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)

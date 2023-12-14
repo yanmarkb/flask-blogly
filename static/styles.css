@@ -23,6 +23,7 @@ button[type="submit"] {
     padding: 10px;
     cursor: pointer;
     border-radius: 5px;
+    font-size: medium;
 }
 
 a.add-user {
@@ -112,6 +113,7 @@ img {
     text-decoration: none;
     width: 100px;
     text-align: center;
+    margin: 5px;
 }
 
 .posts-list {

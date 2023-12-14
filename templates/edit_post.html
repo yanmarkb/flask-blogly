@@ -7,7 +7,16 @@
     <input type="text" id="title" name="title" value="{{ post.title }}" required>
     <label for="content">Content:</label>
     <textarea id="content" name="content" required>{{ post.content }}</textarea>
-    <button type="submit">Submit</button>
+    <div>
+        <label>Tags</label>
+        {% for tag in tags %}
+            <div>
+                <input type="checkbox" id="tag-{{ tag.id }}" name="tags" value="{{ tag.id }}" {% if tag in post.tags %}checked{% endif %}>
+                <label for="tag-{{ tag.id }}">{{ tag.name }}</label>
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit">Update Post</button>
 </form>
 <a href="{{ url_for('user_detail', user_id=user.id) }}" class="cancel-btn">Cancel</a>
 {% endblock %}
