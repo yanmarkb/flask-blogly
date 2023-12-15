@@ -1,9 +1,12 @@
 
 """Blogly application."""
 
-from flask import Flask, render_template, request, redirect, url_for, session  # Importing the Flask class, render_template function, and request object.
+from flask import Flask, render_template, request, redirect, url_for, session,flash  # Importing the Flask class, render_template function, and request object.
 
 from models import db, User, Post, Tag  # Importing the db and User classes from the models module.
+
+from sqlalchemy.orm.exc import StaleDataError
+from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)  # Creating an instance of the Flask class.
 
@@ -12,6 +15,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'  # Configuring th
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disabling modification tracking.
 
 app.config['SQLALCHEMY_ECHO'] = True  # Enabling SQL query logging.
+
+app.config['SECRET_KEY'] = 'super-secret-key'  # Setting the secret key for the session.
+
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
+debug = DebugToolbarExtension(app)
 
 db.init_app(app)  # Initializing the database with the Flask application.
 
@@ -76,6 +85,7 @@ def new_post(user_id):
         tag_ids = request.form.getlist('tags')
         tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
         post = Post(title=title, content=content, user_id=user_id)  # Create a new Post object with the given title, content, and user_id.
+        post.tags = tags
         db.session.add(post)  # Add the post to the database session.
         db.session.commit()  # Commit the changes to the database.
         return redirect(url_for('user_detail', user_id=user_id))  # Redirect to the 'user_detail' route for the user.
@@ -111,6 +121,9 @@ def edit_post(post_id):
 def delete_post(post_id):
     """Delete a post."""
     post = Post.query.get_or_404(post_id)  # Get the post with the given post_id from the database.
+    
+    post.tags = [] # Remove all the tags associated with the post.
+    db.session.commit()
     db.session.delete(post)  # Delete the post from the database.
     db.session.commit()  # Commit the changes to the database.
     return redirect(url_for('user_detail', user_id=post.user_id))  # Redirect to the 'user_detail' route for the user.
@@ -120,7 +133,7 @@ def tags_index():
     """Show all tags."""
     tags = Tag.query.all()
     return render_template('tags.html', tags=tags)
-#CREATE NEW HTML TEMPLATE
+
 
 @app.route('/tags/new', methods=['GET', 'POST'])
 def new_tag():
@@ -147,24 +160,57 @@ def edit_tag(tag_id):
     """Edit a tag."""
     tag = Tag.query.get_or_404(tag_id)
 
+    user = tag.posts[0].user if tag.posts else None # Get the user associated with the tag.
+
+    if not user:
+        # Redirect to a different page when the tag has no associated posts
+        return redirect(url_for('tags_index'))
+
     if request.method == 'POST':
         tag.name = request.form['name']
         db.session.commit()
         return redirect(url_for('tags_index'))
 
-    return render_template('edit_tags.html', tag=tag)
+    return render_template('edit_tags.html', tag=tag, user=user)
 
 
-@app.route('/tags/<int:tag_id>/delete', methods=['POST'])
-def delete_tag(tag_id):
-    """Delete a tag."""
-    tag = Tag.query.get_or_404(tag_id)
-    db.session.delete(tag)
-    db.session.commit()
-    return redirect(url_for('tags'))
-
+# @app.route('/tags/<int:tag_id>/delete', methods=['POST'])
+# def delete_tag(tag_id):
+#     """Delete a tag."""
+#     tag = Tag.query.get_or_404(tag_id)
+#     try:
+#         for post in tag.related_posts:
+#             post.related_tags.remove(tag)
+#         db.session.delete(tag)
+#         db.session.commit()
+#     except StaleDataError:
+#         db.session.rollback()
+#         flash('Tag was already deleted.', 'error')
+#     return redirect(url_for('tags_index'))
 
 if __name__ == '__main__':
     app.run(debug=True)  # Run the Flask application in debug mode.
 
 
+@app.route('/tags/<int:tag_id>/delete', methods=['POST'])
+def delete_tag(tag_id):
+    tag = Tag.query.get(tag_id)
+    
+    if tag is None:
+        flash('Tag not found.')
+        return redirect(url_for('tags_index'))
+    
+    # Remove the tag from each post's tags list
+    for post in tag.posts[:]:
+        post.tags.remove(tag)
+    
+    # Now that the tag is no longer associated with any posts, we can delete it
+    try:
+        db.session.delete(tag)
+        db.session.commit()
+        flash('Tag deleted.')
+    except StaleDataError:
+        db.session.rollback()
+        flash('Error deleting tag.')
+    
+    return redirect(url_for('tags_index'))

@@ -114,6 +114,7 @@ img {
     width: 100px;
     text-align: center;
     margin: 5px;
+    font-size: medium;
 }
 
 .posts-list {
@@ -199,4 +200,14 @@ img {
     text-align: center;
     margin: 5px;
     font-size: medium;
+}
+
+.tag {
+    display: inline-block;
+    background-color: lightblue;
+    color: white;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+    text-decoration: none;
 }

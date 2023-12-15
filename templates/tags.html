@@ -9,7 +9,7 @@
         {% endfor %}
     </ul>
     <div>
-        <a href="{{ url_for('new_tag') }}" class="new-post-btn">Create Tag</a>
-        
+        <button onclick="window.location.href='{{ url_for('new_tag') }}'" type="submit">Create Tag</button>
+        <button type="submit" onclick="window.history.back();">Cancel</button>
     </div>
 {% endblock %}
