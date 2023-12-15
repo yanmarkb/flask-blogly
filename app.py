@@ -131,47 +131,47 @@ def delete_post(post_id):
 @app.route('/tags', methods=['GET'])
 def tags_index():
     """Show all tags."""
-    tags = Tag.query.all()
-    return render_template('tags.html', tags=tags)
+    tags = Tag.query.all()  # Get all the tags from the database.
+    return render_template('tags.html', tags=tags)  # Render the 'tags.html' template with the tags data.
 
 
 @app.route('/tags/new', methods=['GET', 'POST'])
 def new_tag():
     """Add a tag."""
-    if request.method == 'POST':
-        name = request.form['name']
-        tag = Tag(name=name)
-        db.session.add(tag)
-        db.session.commit()
-        return redirect(url_for('tags_index'))
+    if request.method == 'POST':  # Check if the request method is POST.
+        name = request.form['name']  # Get the value of the 'name' field from the form.
+        tag = Tag(name=name)  # Create a new Tag object with the given name.
+        db.session.add(tag)  # Add the tag to the database session.
+        db.session.commit()  # Commit the changes to the database.
+        return redirect(url_for('tags_index'))  # Redirect to the 'tags_index' route.
 
-    return render_template('new_tags.html')
+    return render_template('new_tags.html')  # Render the 'new_tags.html' template.
 
 
 @app.route('/tags/<int:tag_id>', methods=['GET'])
 def show_tag(tag_id):
     """Show a tag."""
-    tag = Tag.query.get_or_404(tag_id)
-    return render_template('show_tags.html', tag=tag)
+    tag = Tag.query.get_or_404(tag_id)  # Get the tag with the given tag_id from the database.
+    return render_template('show_tags.html', tag=tag)  # Render the 'show_tags.html' template with the tag data.
 
 
 @app.route('/tags/<int:tag_id>/edit', methods=['GET', 'POST'])
 def edit_tag(tag_id):
     """Edit a tag."""
-    tag = Tag.query.get_or_404(tag_id)
+    tag = Tag.query.get_or_404(tag_id)  # Get the tag with the given tag_id from the database.
 
-    user = tag.posts[0].user if tag.posts else None # Get the user associated with the tag.
+    user = tag.posts[0].user if tag.posts else None  # Get the user associated with the tag.
 
     if not user:
         # Redirect to a different page when the tag has no associated posts
-        return redirect(url_for('tags_index'))
+        return redirect(url_for('tags_index'))  # Redirect to the 'tags_index' route.
 
-    if request.method == 'POST':
-        tag.name = request.form['name']
-        db.session.commit()
-        return redirect(url_for('tags_index'))
+    if request.method == 'POST':  # Check if the request method is POST.
+        tag.name = request.form['name']  # Update the tag's name with the value from the form.
+        db.session.commit()  # Commit the changes to the database.
+        return redirect(url_for('tags_index'))  # Redirect to the 'tags_index' route.
 
-    return render_template('edit_tags.html', tag=tag, user=user)
+    return render_template('edit_tags.html', tag=tag, user=user)  # Render the 'edit_tags.html' template with the tag and user data.
 
 
 # @app.route('/tags/<int:tag_id>/delete', methods=['POST'])
@@ -187,10 +187,6 @@ def edit_tag(tag_id):
 #         db.session.rollback()
 #         flash('Tag was already deleted.', 'error')
 #     return redirect(url_for('tags_index'))
-
-if __name__ == '__main__':
-    app.run(debug=True)  # Run the Flask application in debug mode.
-
 
 @app.route('/tags/<int:tag_id>/delete', methods=['POST'])
 def delete_tag(tag_id):
@@ -214,3 +210,8 @@ def delete_tag(tag_id):
         flash('Error deleting tag.')
     
     return redirect(url_for('tags_index'))
+
+if __name__ == '__main__':
+    app.run(debug=True)  # Run the Flask application in debug mode.
+
+
